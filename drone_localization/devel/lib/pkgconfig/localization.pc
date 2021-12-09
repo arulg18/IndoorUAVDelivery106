@@ -1,0 +1,8 @@
+prefix=/home/kaushik/ros_workspaces/drone_localization/devel
+
+Name: localization
+Description: Description of localization
+Version: 0.0.0
+Cflags: -I/home/kaushik/ros_workspaces/drone_localization/devel/include -I/opt/ros/kinetic/include -I/usr/include
+Libs: -L${prefix}/lib /opt/ros/kinetic/lib/libroscpp_serialization.so /opt/ros/kinetic/lib/librostime.so /opt/ros/kinetic/lib/libcpp_common.so /usr/lib/x86_64-linux-gnu/libboost_system.so /usr/lib/x86_64-linux-gnu/libboost_thread.so /usr/lib/x86_64-linux-gnu/libboost_chrono.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so /usr/lib/x86_64-linux-gnu/libboost_atomic.so /usr/lib/x86_64-linux-gnu/libpthread.so /usr/lib/x86_64-linux-gnu/libconsole_bridge.so
+Requires: rospy std_msgs message_runtime

@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/kaushik/ros_workspaces/drone_localization/devel/setup.sh

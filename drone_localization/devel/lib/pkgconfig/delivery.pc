@@ -1,0 +1,8 @@
+prefix=/home/kaushik/ros_workspaces/drone_localization/devel
+
+Name: delivery
+Description: Description of delivery
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

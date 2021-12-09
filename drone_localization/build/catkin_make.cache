@@ -1,0 +1,2 @@
+delivery
+-DCATKIN_DEVEL_PREFIX=/home/kaushik/ros_workspaces/drone_localization/devel -DCMAKE_INSTALL_PREFIX=/home/kaushik/ros_workspaces/drone_localization/install -G Unix Makefiles

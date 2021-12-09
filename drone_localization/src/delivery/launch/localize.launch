@@ -1,0 +1,24 @@
+<launch>
+	<node pkg="rosserial_python" type="serial_node.py" name="beacon_0" output="screen">
+		<param name="port" value="/dev/ttyACM0"/>
+		<param name="baud" value="115200"/>
+	</node>
+
+	<node pkg="rosserial_python" type="serial_node.py" name="beacon_1" output="screen">
+		<param name="port" value="/dev/ttyACM1"/>
+		<param name="baud" value="115200"/>
+	</node>
+
+	<node pkg="rosserial_python" type="serial_node.py" name="beacon_2" output="screen">
+		<param name="port" value="/dev/ttyACM2"/>
+		<param name="baud" value="115200"/>
+	</node>
+
+	<node pkg="rosserial_python" type="serial_node.py" name="beacon_3" output="screen">
+		<param name="port" value="/dev/ttyACM3"/>
+		<param name="baud" value="115200"/>
+	</node>
+
+	<node pkg="delivery" type="trilateration.py" name="trilateration" output="screen">
+	</node>
+</launch>
