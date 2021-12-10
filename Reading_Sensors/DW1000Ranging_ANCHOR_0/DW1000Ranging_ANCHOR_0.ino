@@ -23,7 +23,7 @@ const uint8_t PIN_SS = 3; // spi select pin
 //ros variables
 ros::NodeHandle nh;
 localization::TimestampDistance distance_msg;
-ros::Publisher range_pub("distance_1", &distance_msg);
+ros::Publisher range_pub("distance_0", &distance_msg);
 
 void setup() {
   nh.getHardware()->setBaud(115200);
@@ -35,7 +35,7 @@ void setup() {
   DW1000Ranging.attachNewRange(newRange);
   DW1000Ranging.attachBlinkDevice(newBlink);
   DW1000Ranging.attachInactiveDevice(inactiveDevice);
-  byte id[2] = {0, 1};
+  byte id[2] = {0, 0};
   //Enable the filter to smooth the distance
 //  DW1000Ranging.useRangeFilter(true);
   //we start the module as an anchor
@@ -59,7 +59,7 @@ void newRange() {
   delay(3);
 //  int timE = (DW1000Ranging.getDistantDevice()->timeRangeReceived.getAsMicroSeconds())/(1000);
 //  Serial.print("\t from: "); Serial.print(DW1000Ranging.getDistantDevice()->getShortAddress(), HEX);
-//  Serial.print("\t Range: "); Serial.print(distance_msg.distance); Serial.println(" m");
+//  Serial.print("\t Range: "); Serial.print(range); Serial.print(" m");
 //  Serial.print("\t RX power: "); Serial.print(DW1000Ranging.getDistantDevice()->getRXPower()); Serial.println(" dBm");
 //  Serial.print("\t Time Stamp: "); Serial.print(time); Serial.println(" ms");
 
