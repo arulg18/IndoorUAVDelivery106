@@ -65,7 +65,7 @@ class LocalPlanner:
         self.drone_pose_path_frame = self.transform_pose_to_path_frame(world_pose)
         return self.drone_pose_path_frame[0] >= waypoint_pose_path_frame[0]
 
-    def next_waypoint_reached(self, drone_yaw) -> int:
+    def next_waypoint_reached(self, drone_yaw):
         self.count += 1
         self.calculate_path_angle_for_next_waypoint()
 

@@ -43,10 +43,10 @@ class Drone:
         self.land()
 
     def start_local_planner(self, start, destination):
-        self.local_planner: LocalPlanner = LocalPlanner(start, destination)
+        self.local_planner = LocalPlanner(start, destination)
 
     def start_local_planner(self, start, destination, p, i, d, w):
-        self.local_planner: LocalPlanner = LocalPlanner(start, destination, p, i, d, w)
+        self.local_planner = LocalPlanner(start, destination, p, i, d, w)
 
     def initialize_pose(self, destination):
         self.start_time = rospy.Time.now()
