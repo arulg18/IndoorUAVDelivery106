@@ -51,7 +51,14 @@ class Drone:
     def initialize_pose(self, destination):
         self.start_time = rospy.Time.now()
         self.r = rospy.Rate(10)
-        self.curr_pose = rospy.wait_for_message("unfiltered_pose", Pose)
+        #self.curr_pose = rospy.wait_for_message("unfiltered_pose", Pose)
+
+        self.curr_pose = None
+        while self.curr_pose is None:
+            try:
+                self.curr_pose = rospy.wait_for_message("unfiltered_pose", Pose, timeout=10)
+            except:
+                pass
 
         xy_pose = (self.curr_pose.position.x, self.curr_pose.position.y)
         # Create local planner object and find path to destination from start

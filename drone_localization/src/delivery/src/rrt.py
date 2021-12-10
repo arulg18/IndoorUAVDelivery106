@@ -1,4 +1,4 @@
-from drone_localization.src.delivery.src.rrt.rrt_base import RRTBase
+from rrt_base import RRTBase
 
 
 class RRT(RRTBase):

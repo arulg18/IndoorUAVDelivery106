@@ -2,8 +2,8 @@ import enum
 
 import numpy as np
 
-from drone_localization.src.delivery.src.rrt.rrt_base import RRTBase
-from drone_localization.src.delivery.src.utilities.geometry import steer
+from rrt_base import RRTBase
+from geometry import steer
 
 
 class Status(enum.Enum):

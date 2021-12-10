@@ -2,9 +2,9 @@
 # file 'LICENSE', which is part of this source code package.
 from operator import itemgetter
 
-from drone_localization.src.delivery.src.rrt.heuristics import cost_to_go
-from drone_localization.src.delivery.src.rrt.heuristics import segment_cost, path_cost
-from drone_localization.src.delivery.src.rrt.rrt import RRT
+from heuristics import cost_to_go
+from heuristics import segment_cost, path_cost
+from rrt import RRT
 
 
 class RRTStar(RRT):

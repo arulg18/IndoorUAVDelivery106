@@ -2,8 +2,8 @@ import random
 
 import numpy as np
 
-from drone_localization.src.delivery.src.rrt.tree import Tree
-from drone_localization.src.delivery.src.utilities.geometry import steer
+from tree import Tree
+from geometry import steer
 
 
 class RRTBase(object):
