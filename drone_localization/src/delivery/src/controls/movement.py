@@ -1,8 +1,7 @@
-import math
 from collections import deque
 
 import numpy as np
-from drone_localization.src.delivery.src.controls.pathfinder import RRTPathfinder
+from pathfinder import RRTPathfinder
 
 
 class LocalPlanner:

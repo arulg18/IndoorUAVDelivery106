@@ -1,6 +1,6 @@
 import rospy
 from djitellopy import Tello
-from drone_localization.src.delivery.src.controls.movement import LocalPlanner
+from novement import LocalPlanner
 from geometry_msgs.msg import Pose
 import numpy as np
 
@@ -43,10 +43,10 @@ class Drone:
         self.land()
 
     def start_local_planner(self, start, destination):
-        self.local_planner = LocalPlanner(start, destination)
+        self.local_planner: LocalPlanner = LocalPlanner(start, destination)
 
     def start_local_planner(self, start, destination, p, i, d, w):
-        self.local_planner = LocalPlanner(start, destination, p, i, d, w)
+        self.local_planner: LocalPlanner = LocalPlanner(start, destination, p, i, d, w)
 
     def initialize_pose(self, destination):
         self.start_time = rospy.Time.now()
@@ -56,7 +56,6 @@ class Drone:
         xy_pose = (self.curr_pose.position.x, self.curr_pose.position.y)
         # Create local planner object and find path to destination from start
         self.start_local_planner(xy_pose, destination)
-        self.initial_yaw = self.drone.get_yaw()
         self.listener()
 
     def callback(self, message):

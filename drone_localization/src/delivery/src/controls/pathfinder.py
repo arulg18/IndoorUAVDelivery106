@@ -1,13 +1,11 @@
 import numpy as np
 
-from drone_localization.src.delivery.src.rrt.rrt_star import RRTStar
-from drone_localization.src.delivery.src.search_space.search_space import SearchSpace
+from rrt_star import RRTStar
+from search_space import SearchSpace
 
 
 class RRTPathfinder:
-    Obstacles = np.array(
-        [(20, 20, 20, 40), (20, 20, 60, 40), (20, 60, 20, 40), (60, 60, 20, 80),
-         (60, 20, 20, 80), (60, 20, 60, 80), (20, 60, 60, 40), (60, 60, 60, 80)])
+    Obstacles = np.array([])
     X_dimensions = np.array([(0, 500), (0, 500)])
     Q = np.array([(2, 1)])  # length of tree edges
     r = .1  # length of smallest edge to check for intersection with obstacles
