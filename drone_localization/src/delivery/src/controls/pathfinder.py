@@ -1,9 +1,10 @@
 import numpy as np
 
-from src.rrt.rrt_star import RRTStar
-from src.search_space.search_space import SearchSpace
+from drone_localization.src.delivery.src.rrt.rrt_star import RRTStar
+from drone_localization.src.delivery.src.search_space.search_space import SearchSpace
 
-class RRT_Pathfinder:
+
+class RRTPathfinder:
     Obstacles = np.array(
         [(20, 20, 20, 40), (20, 20, 60, 40), (20, 60, 20, 40), (60, 60, 20, 80),
          (60, 20, 20, 80), (60, 20, 60, 80), (20, 60, 60, 40), (60, 60, 60, 80)])
@@ -18,7 +19,8 @@ class RRT_Pathfinder:
     X = SearchSpace(X_dimensions, Obstacles)
 
     def __init__(self, x_init, x_goal):
-        self.rrt_star_handler = RRTStar(RRT_Pathfinder.X, RRT_Pathfinder.Q, x_init, x_goal, RRT_Pathfinder.max_samples, RRT_Pathfinder.r, RRT_Pathfinder.prc, RRT_Pathfinder.rewire_count)
+        self.rrt_star_handler = RRTStar(RRTPathfinder.X, RRTPathfinder.Q, x_init, x_goal, RRTPathfinder.max_samples,
+                                        RRTPathfinder.r, RRTPathfinder.prc, RRTPathfinder.rewire_count)
 
     def find_path(self):
         return self.rrt_star_handler.rrt_star()

@@ -2,7 +2,7 @@ import math
 from collections import deque
 
 import numpy as np
-from drone_localization.src.delivery.src.controls.pathfinder import RRT_Pathfinder
+from drone_localization.src.delivery.src.controls.pathfinder import RRTPathfinder
 
 
 class LocalPlanner:
@@ -11,7 +11,7 @@ class LocalPlanner:
     END_POS_TOLERANCE_Z = 5
 
     def __init__(self, start, destination, p_gain=0.2, i_gain=0.1, d_gain=0.01, w_gain=0.9):
-        self.pathfinder = RRT_Pathfinder(start, destination)
+        self.pathfinder = RRTPathfinder(start, destination)
         self.path = self.pathfinder.find_path()[1]
         self.count = 0
         self.calculate_path_angle_for_next_waypoint()
@@ -58,8 +58,8 @@ class LocalPlanner:
 
     def is_next_waypoint_reached(self, world_pose):
         waypoint = self.path[self.count + 1]
-        waypoint_vec = np.array([waypoint[0]],
-                                [waypoint[1]])
+        waypoint_vec = np.array([[waypoint[0]],
+                                [waypoint[1]]])
 
         waypoint_pose_path_frame = self.transform_pose_to_path_frame(waypoint_vec)
         self.drone_pose_path_frame = self.transform_pose_to_path_frame(world_pose)

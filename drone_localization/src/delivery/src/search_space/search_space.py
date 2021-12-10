@@ -4,8 +4,8 @@
 import numpy as np
 from rtree import index
 
-from src.utilities.geometry import es_points_along_line
-from src.utilities.obstacle_generation import obstacle_generator
+from drone_localization.src.delivery.src.utilities.geometry import es_points_along_line
+from drone_localization.src.delivery.src.utilities.obstacle_generation import obstacle_generator
 
 
 class SearchSpace(object):

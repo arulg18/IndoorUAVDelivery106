@@ -1,4 +1,3 @@
-
 # from src.controls.movement import Drone
 #
 # my_drone = Drone()
@@ -21,18 +20,24 @@
 #     my_drone.generate_local_line(my_drone.get_next_waypoint(count-1),my_drone.get_next_waypoint(count),orientation)
 #
 
-# TODO: ROSIFY this
-from src.controls.drone import Drone
+from drone_localization.src.delivery.src.controls.drone import Drone
 import rospy
+from geometry_msgs.msg import Pose
 
-# TODO parameterize yaw, start, dest as an input on runtime?
-#  start technically is based on drone, so that shouldn't be parametrized
-parameterized_yaw = None
-start = None
-dest = None
 
-drone = Drone(10, parameterized_yaw)
-rospy.sleep(0.5)
+if __name__ == '__main__':
+    rospy.init_node('executor', anonymous=True)
 
-drone.takeoff()
-drone.execute_path_plan(start, dest, None)
+    destination = (2.5, 2.5)
+
+    drone = Drone(10, 0)
+    rospy.sleep(0.5)
+
+    drone.takeoff()
+
+    curr_pose = rospy.wait_for_message("unfiltered_pose", Pose)
+    drone.initialize_pose(curr_pose, destination, None)
+
+    drone.execute_path_plan()
+    drone.land()
+

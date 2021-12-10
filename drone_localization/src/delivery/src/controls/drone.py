@@ -1,6 +1,8 @@
 import rospy
 from djitellopy import Tello
 from drone_localization.src.delivery.src.controls.movement import LocalPlanner
+from geometry_msgs.msg import Pose
+import numpy as np
 
 
 class Drone:
@@ -9,10 +11,13 @@ class Drone:
     world_yaw: int TODO description
     """
 
-    def __init__(self, forward_vel , world_yaw):
+    def __init__(self, forward_vel, world_yaw):
         self.drone = Tello()
         self.vel = forward_vel
         self.initial_yaw = world_yaw
+        self.start_time = 0.0
+        self.r = None
+        self.curr_pose = None
 
         rospy.on_shutdown(self.shutdown)
 
@@ -33,6 +38,7 @@ class Drone:
     """
     Shutdown procedure
     """
+
     def shutdown(self):
         self.land()
 
@@ -42,32 +48,45 @@ class Drone:
     def start_local_planner(self, start, destination, p, i, d, w):
         self.local_planner: LocalPlanner = LocalPlanner(start, destination, p, i, d, w)
 
+    def initialize_pose(self, destination):
+        self.start_time = rospy.Time.now()
+        self.r = rospy.Rate(10)
+        self.curr_pose = rospy.wait_for_message("unfiltered_pose", Pose)
+
+        xy_pose = (self.curr_pose.position.x, self.curr_pose.position.y)
+        # Create local planner object and find path to destination from start
+        self.start_local_planner(xy_pose, destination)
+        self.initial_yaw = self.drone.get_yaw()
+        self.listener()
+
+    def callback(self, message):
+        self.curr_pose = message
+
+    def listener(self):
+        rospy.Subscriber("unfiltered_pose", Pose, self.callback)
+
+        rospy.spin()
+
     """
     Execute 2D path plan at hover height from start to destination coordinates
     """
 
-    def execute_path_plan(self, start, destination, timeout_secs=60):
-        start_time = rospy.Time.now()
-        r = rospy.Rate(10)
-
-        # Create local planner object and find path to destination from start
-        self.start_local_planner(start, destination)
-        self.initial_yaw = self.drone.get_yaw()
-
+    def execute_path_plan(self, timeout_secs=60):
         while not rospy.is_shutdown():
-            t = (rospy.Time.now() - start_time).to_sec()
+            t = (rospy.Time.now() - self.start_time).to_sec()
 
             if timeout_secs is not None and t >= timeout_secs:
                 break
 
-            # TODO: curr_pose = convertToFormat(ros.subscribe)
-            curr_pose = None
+            pose = np.array([[self.curr_pose.position.x],
+                             [self.curr_pose.position.y],
+                             [self.curr_pose.position.z]])
 
-            if not self.local_planner.is_next_waypoint_reached(curr_pose):
-                yaw_input = self.local_planner.adjust_next_step(curr_pose, t)
+            if not self.local_planner.is_next_waypoint_reached(pose):
+                yaw_input = self.local_planner.adjust_next_step(pose, t)
 
                 self.drone.send_rc_control(self.vel, 0, 0, yaw_input)
-                r.sleep()
+                self.r.sleep()
             else:
                 angle = self.local_planner.next_waypoint_reached(self.drone.get_yaw() + self.initial_yaw)
                 if self.local_planner.reached_destination():
@@ -78,7 +97,6 @@ class Drone:
                 elif angle < 0:
                     self.drone.rotate_clockwise(abs(angle))
                     # rospy.sleep() TODO check if needed then remove
-                r.sleep()
+                self.r.sleep()
 
         self.land()
-

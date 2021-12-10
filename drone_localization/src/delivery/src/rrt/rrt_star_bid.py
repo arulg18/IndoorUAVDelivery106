@@ -3,8 +3,8 @@
 
 import random
 
-from src.rrt.heuristics import path_cost
-from src.rrt.rrt_star import RRTStar
+from drone_localization.src.delivery.src.rrt.heuristics import path_cost
+from drone_localization.src.delivery.src.rrt.rrt_star import RRTStar
 
 
 class RRTStarBidirectional(RRTStar):
