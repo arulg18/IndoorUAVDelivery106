@@ -19,9 +19,84 @@ const uint8_t PIN_RST = 4; // reset pin
 const uint8_t PIN_IRQ = 7; // irq pin
 const uint8_t PIN_SS = 3; // spi select pin
 
-float arr[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int count = 0;
-float average = 0;
+// float arr[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+// int count = 0;
+// float average = 0;
+
+
+// median
+#define N (5)
+struct cir {
+    float a[N];
+    unsigned h;
+    unsigned t;
+    unsigned n;
+};
+typedef volatile struct cir cir_t;
+
+cir_t *cir_new() {
+    cir_t *cir = malloc(sizeof(*cir));
+    cir->h = 0;
+    cir->t = N - 1;
+    cir->n = N;
+    return cir;
+}
+
+
+// if adding 1 to tail == head, then there is nothing
+float cir_empty(cir_t *cir) {
+    return (cir->t + 1) % N == cir->h;
+}
+
+// if adding 1 to head = tail, then we have no space.
+float cir_full(cir_t *cir) {
+    return cir->h == cir->t;
+}
+
+void cir_enqueue(cir_t *cir, float x) {
+    if (cir_full(cir)) cir->t = (cir->t + 1) % N;
+    cir->a[cir->h] = x;
+    cir->h = (cir->h + 1) % N;
+}
+
+
+int compare(const void *x, const void * y) {
+    float ix = *(float*)x;
+    float iy = *(float*)y;
+    return (int)(ix - iy);
+}
+
+float cir_median(cir_t *cir) {
+    float q[cir->n];
+    int qcount = 0;
+    // Populate the array
+    if(cir_empty(cir)) return 0;
+    else if(cir_full(cir)) {
+        qcount = cir->n;
+        for(int i = 0; i < cir->n; i++) {
+            q[i] = cir->a[i];
+        }
+    } else if(cir->t > cir->h) {
+        for(int i = 0; i < cir->h; i++) {
+            q[qcount] = cir->a[i];
+            qcount++;
+        }
+        for(int i = cir->t; i < cir->n - 1; i++) {
+            q[qcount] = cir->a[i];
+            qcount++;
+        }
+    } else {
+        for(int i = cir->t; i < cir->h; i++) {
+            q[qcount] = cir->a[i];
+            qcount++;
+        }
+    }
+    // Sort the array
+    qsort(q, qcount, sizeof(float), compare);
+    return q[qcount/2];
+}
+
+cir_t *cir1 = cir_new();
 
 //ros variables
 ros::NodeHandle nh;
@@ -58,12 +133,9 @@ void loop() {
 void newRange() {
 
   float dist = DW1000Ranging.getDistantDevice()->getRange();
-  float oldest = arr[count];
-  arr[count] = dist;
-  average = ((average * 10 - oldest) + arr[count]) / 10;
-  count = (count + 1) % 10;
-  
-  distance_msg.distance = average;
+  cir_enqueue(cir1,dist);
+  distance_msg.distance = cir_median(cir1);
+
   distance_msg.header.stamp = nh.now();
   range_pub.publish(&distance_msg);
   nh.spinOnce();
