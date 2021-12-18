@@ -21,7 +21,7 @@
 #     my_drone.generate_local_line(my_drone.get_next_waypoint(count-1),my_drone.get_next_waypoint(count),orientation)
 #
 
-from drone import Drone
+from adrone import Drone
 import rospy
 from geometry_msgs.msg import Pose
 
@@ -29,12 +29,13 @@ from geometry_msgs.msg import Pose
 if __name__ == '__main__':
     rospy.init_node('executor', anonymous=True)
 
-    destination = (2.5, 2.5)
+    destination = (136, 255)
 
-    drone = Drone(10, 0)
-    rospy.sleep(0.5)
+    drone = Drone(10, 90)
+    rospy.sleep(10)
 
     drone.takeoff()
+    rospy.sleep(3)
 
     drone.initialize_pose(destination)
 
