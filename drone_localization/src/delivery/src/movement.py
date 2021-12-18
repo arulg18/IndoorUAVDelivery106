@@ -10,8 +10,11 @@ class LocalPlanner:
     END_POS_TOLERANCE_Y = 10
 
     def __init__(self, start, destination, p_gain=0.4, i_gain=0.1, d_gain=0.06, w_gain=0.1):
+        # RRT* path unusable due to the yaw state being inaccessible through the VMWare Linux machine
+        # functionally, the path will work if uncommented, though it is rawer
+        # since there's no explicit turns between waypoints since we can't know our absolute orientation
         #self.pathfinder = RRTPathfinder(start, destination)
-        #self.path = self.pathfinder.find_path()[1]
+        #self.path = self.pathfinder.find_path()
         self.path = [start, destination]
         print(self.path)
 
@@ -42,11 +45,11 @@ class LocalPlanner:
         self._ring_buff.append(curr_derivative)
         ed = np.mean(self._ring_buff)
 
-        yaw_scale = self.Kp * error
+        #yaw_scale = self.Kp * error
         print("error", error)
-        print("yaw_scale", yaw_scale)
+        #print("yaw_scale", yaw_scale)
 
-        #yaw_scale = self.Kp * error + self.Kd * ed
+        yaw_scale = self.Kp * error + self.Kd * ed
         # yaw_scale = self.Kp * error + self.Ki * self.error_sum + self.Kd * ed
 
         self.previous_error = error
@@ -88,16 +91,7 @@ class LocalPlanner:
             return 0
         self.calculate_path_angle_for_next_waypoint()
 
-        return self.path_angle - drone_yaw # TODO: think about like 360 vs 180 and shit
-
-    # def transform_pose_to_path_frame(self, current_pos):
-    #
-    #     inv_rotation_matrix = np.array(
-    #         [[np.cos(self.path_angle), np.sin(self.path_angle)], [-np.sin(self.path_angle), np.cos(self.path_angle)]])
-    #     int_matrix = np.subtract(current_pos, np.transpose([self.path[self.count][0], self.path[self.count][1]]))
-    #     output_transform = np.multiply(inv_rotation_matrix, int_matrix)
-    #
-    #     return output_transform
+        return self.path_angle - drone_yaw
 
     @staticmethod
     def transform_pose_to_path_frame(pose, last_waypoint, angle):
@@ -115,8 +109,8 @@ class LocalPlanner:
             curr[1] - goal[1]) < LocalPlanner.END_POS_TOLERANCE_Y
 
     def reached_destination(self):
-        return self.count == len(self.path) - 1  # TODO maybe add special functionality for destination checking, none for now
+        return self.count == len(self.path) - 1
 
     def reached_destination_radius(self, pose):
-        return LocalPlanner.is_in_range(pose, self.path[-1])  # TODO maybe add special functionality for destination checking, none for now
+        return LocalPlanner.is_in_range(pose, self.path[-1])
 

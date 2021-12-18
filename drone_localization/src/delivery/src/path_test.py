@@ -21,7 +21,7 @@
 #     my_drone.generate_local_line(my_drone.get_next_waypoint(count-1),my_drone.get_next_waypoint(count),orientation)
 #
 
-from adrone import Drone
+from drone import Drone
 import rospy
 from geometry_msgs.msg import Pose
 

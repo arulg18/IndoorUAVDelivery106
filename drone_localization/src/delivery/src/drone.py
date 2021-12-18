@@ -1,6 +1,6 @@
 import rospy
 from djitellopy import Tello
-from amovement import LocalPlanner
+from movement import LocalPlanner
 from geometry_msgs.msg import Pose
 import numpy as np
 import math
@@ -8,8 +8,8 @@ import math
 
 class Drone:
     """
-    forward_vel: float, TODO: range here
-    world_yaw: int TODO description
+    forward_vel: float, Forward velocity
+    world_yaw: Starting yaw
     """
 
     def __init__(self, forward_vel, world_yaw):
@@ -107,10 +107,8 @@ class Drone:
                 print("angle to turn", angle)
                 if angle > 0:
                     self.drone.rotate_counter_clockwise(angle)
-                    # rospy.sleep() TODO check if needed then remove
                 elif angle < 0:
                     self.drone.rotate_clockwise(abs(angle))
-                    # rospy.sleep() TODO check if needed then remove
                 first = False
             self.r.sleep()
         self.drone.send_rc_control(0, 0, 0, 0)
